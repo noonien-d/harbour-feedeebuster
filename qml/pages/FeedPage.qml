@@ -12,6 +12,12 @@ Page {
         header: PageHeader {
             title: qsTr("Subscriptions")
         }
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("Add feed")
+                onClicked: pageStack.push(Qt.resolvedUrl("AddFeedPage.qml"));
+            }
+        }
         delegate: ListItem {
             id: delegate
             Image {

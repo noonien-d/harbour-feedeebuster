@@ -22,7 +22,7 @@
 <context>
     <name>CoverPage</name>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="61"/>
+        <location filename="../qml/cover/CoverPage.qml" line="62"/>
         <source>unread</source>
         <translation type="unfinished"></translation>
     </message>
@@ -35,12 +35,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FeedPage.qml" line="51"/>
+        <location filename="../qml/pages/FeedPage.qml" line="18"/>
+        <source>Add feed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/FeedPage.qml" line="59"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FeedPage.qml" line="55"/>
+        <location filename="../qml/pages/FeedPage.qml" line="63"/>
         <source>Copy Url</source>
         <translation type="unfinished"></translation>
     </message>
@@ -77,16 +82,11 @@
     </message>
     <message>
         <location filename="../qml/pages/ListPage.qml" line="57"/>
-        <source>Add feed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/ListPage.qml" line="61"/>
         <source>Reload all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ListPage.qml" line="70"/>
+        <location filename="../qml/pages/ListPage.qml" line="66"/>
         <source>Items</source>
         <translation type="unfinished"></translation>
     </message>

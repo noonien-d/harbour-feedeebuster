@@ -54,10 +54,6 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("FeedPage.qml"));
             }
             MenuItem {
-                text: qsTr("Add feed")
-                onClicked: pageStack.push(Qt.resolvedUrl("AddFeedPage.qml"));
-            }
-            MenuItem {
                 text: qsTr("Reload all")
                 onClicked: manager.reload();
             }
