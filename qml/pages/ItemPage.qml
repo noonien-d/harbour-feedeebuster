@@ -61,6 +61,7 @@ Page {
                     {
                         mediadownloader.startDownload(currentitem.mediaurl());
                         mediadownloader.downloadReady.connect(onLoaded);
+                        mediadownloader.downloadFailed.connect(onFailed);
                         media_busy.running = true;
                     }
                 }
@@ -73,7 +74,6 @@ Page {
                 }
                 function onLoaded(url, localurl) {
                     console.log("Finished download");
-
                     media_busy.running = false;
                     media_slider.visible = true;
 
@@ -91,6 +91,11 @@ Page {
 
                         console.log("audioPlayer source changed to " + mediadownloader.getLocalPath(currentitem.mediaurl()) + " at " + pos);
                     }
+                }
+                function onFailed(url, localurl) {
+                    console.log("Download failed");
+                    banner.notify(qsTr("Download failed"));
+                    media_busy.running = false;
                 }
             }
         }
@@ -352,6 +357,9 @@ Page {
                     value = (newpos / 1000)
             }
         }
+    }
+    Banner {
+        id: banner
     }
 }
 

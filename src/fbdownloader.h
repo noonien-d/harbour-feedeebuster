@@ -44,11 +44,13 @@ public:
     QNetworkAccessManager mAccessManager;
 
     void onDownloadReady (FBDownload* download);
+    void onDownloadFailed (FBDownload* download);
 
     bool allDownloadsFinished();
 
 signals:
     void downloadReady (QString url, QString localurl);
+    void downloadFailed (QString url, QString localurl);
 
 public Q_SLOTS:
     void startDownload (QString uri);

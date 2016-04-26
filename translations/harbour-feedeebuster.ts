@@ -35,17 +35,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FeedPage.qml" line="18"/>
+        <location filename="../qml/pages/FeedPage.qml" line="17"/>
         <source>Add feed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FeedPage.qml" line="59"/>
+        <location filename="../qml/pages/FeedPage.qml" line="57"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FeedPage.qml" line="63"/>
+        <location filename="../qml/pages/FeedPage.qml" line="61"/>
         <source>Copy Url</source>
         <translation type="unfinished"></translation>
     </message>
@@ -58,12 +58,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ItemPage.qml" line="161"/>
+        <location filename="../qml/pages/ItemPage.qml" line="97"/>
+        <source>Download failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/ItemPage.qml" line="166"/>
         <source>view full content</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ItemPage.qml" line="233"/>
+        <location filename="../qml/pages/ItemPage.qml" line="238"/>
         <source>Website</source>
         <translation type="unfinished"></translation>
     </message>

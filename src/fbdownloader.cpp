@@ -36,8 +36,6 @@ void FBDownload::startDownload ()
 
 void FBDownload::onDownloaded ()
 {
-    qDebug() << "error: " << mReply->error();
-
     if (mReply->size() == 0)
     {
         qDebug() << "got zero size, check header..." << mUrl;
@@ -72,15 +70,25 @@ void FBDownload::onDownloaded ()
                         this, &FBDownload::onReadyRead);
                 connect(mReply, &QNetworkReply::finished,
                         this, &FBDownload::onDownloaded);
+
+                return;
             }
         }
+
+        qDebug() << "No relocation in header";
+        mDownloader->onDownloadFailed(this);
     }
     else if (mReply->error() == 0)
     {
         if (mFile == NULL)
         {
             mFile = new QFile(mFilepath + ".part");
-            mFile->open(QFile::WriteOnly);
+            if (!mFile->open(QFile::WriteOnly))
+            {
+                qDebug() << "Error " << mFile->error() << ": " << mFile->errorString();
+                mDownloader->onDownloadFailed(this);
+                return;
+            }
         }
 
         mFile->write(mReply->readAll());
@@ -91,13 +99,20 @@ void FBDownload::onDownloaded ()
             oldfile.remove();
 
         if (!mFile->rename(mFilepath))
-            qWarning() << "Renaming failed";
-
-        qDebug() << "download ready";
-
-        emit downloadReady(mUrl, mFilepath);
-
-        mDownloader->onDownloadReady(this);
+        {
+            qDebug() << "Error " << mFile->error() << ": " << mFile->errorString();
+            mDownloader->onDownloadFailed(this);
+        }
+        else
+        {
+            emit downloadReady(mUrl, mFilepath);
+            mDownloader->onDownloadReady(this);
+        }
+    }
+    else
+    {
+        qDebug() << "Error " << mReply->error() << ": " << mReply->errorString();
+        mDownloader->onDownloadFailed(this);
     }
 }
 
@@ -106,7 +121,11 @@ void FBDownload::onReadyRead()
     if (mFile == NULL)
     {
         mFile = new QFile(mFilepath + ".part");
-        mFile->open(QFile::WriteOnly);
+        if (!mFile->open(QFile::WriteOnly))
+        {
+            qDebug() << "Failed to open intermediate file for " << mFilepath;
+            return;
+        }
     }
 
     mFile->write(mReply->read(1024));
@@ -172,11 +191,20 @@ void FBDownloader::startDownload(QString url)
 
 void FBDownloader::onDownloadReady (FBDownload* download)
 {
-    qDebug ("download ready");
+    qDebug() << download->mUrl << " ready";
 
     mPendingUrl.removeOne(download->mUrl);
 
     emit downloadReady(download->mUrl, download->mFilepath);
+}
+
+void FBDownloader::onDownloadFailed (FBDownload* download)
+{
+    qDebug() << download->mUrl << " failed";
+
+    mPendingUrl.removeOne(download->mUrl);
+
+    emit downloadFailed(download->mUrl, download->mFilepath);
 }
 
 void FBDownloader::startDownloadUpdate(QString url, QString localurl)

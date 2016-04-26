@@ -66,4 +66,5 @@ DISTFILES += \
     rpm/harbour-feedeebuster.yaml \
     qml/pages/ConfigPage.qml \
     qml/pages/ListPage.qml \
-    qml/pages/FeedPage.qml
+    qml/pages/FeedPage.qml \
+    qml/pages/Banner.qml
