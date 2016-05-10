@@ -29,7 +29,7 @@ signals:
 private:
     void processItem(QXmlStreamReader& xml);
     void processEntry(QXmlStreamReader& xml);
-
+    QString processImage(QXmlStreamReader& xml);
 };
 
 #endif // FBFEED_H

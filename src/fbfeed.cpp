@@ -43,8 +43,13 @@ bool FBFeed::parseFile(QString filepath)
                 processItem(xml);
             else if (xml.name() == "entry")
                 processEntry(xml);
-            else if ((xml.name() == "image") && xml.attributes().hasAttribute("href"))
-                imageurl = xml.attributes().value("href").toString();
+            else if (xml.name() == "image")
+            {
+                if (xml.attributes().hasAttribute("href"))
+                    imageurl = xml.attributes().value("href").toString();
+                else if (xml.isStartElement())
+                    imageurl = processImage(xml);
+            }
             else if ((xml.name() == "link") && xml.attributes().hasAttribute("rel") && (xml.attributes().value("rel").toString() == "self"))
                 selfurl = xml.attributes().value("href").toString();
         }
@@ -308,4 +313,22 @@ void FBFeed::processEntry(QXmlStreamReader& xml) {
     mItemList.append(item);
 
     emit newItem(item);
+}
+
+QString FBFeed::processImage(QXmlStreamReader& xml)
+{
+    while (!xml.atEnd())
+    {
+        QXmlStreamReader::TokenType t = xml.readNext();
+        if (t >= QXmlStreamReader::StartElement)
+        {
+            qDebug() << xml.name();
+
+            if (xml.name() == "url")
+                return xml.readElementText();
+        }
+        if ((t == QXmlStreamReader::EndElement) && (xml.name() == "image"))
+            break;
+    }
+    return "";
 }
