@@ -21,7 +21,7 @@ Page {
         delegate: ListItem {
             id: delegate
             Image {
-                id: feedicon
+                id: feediconimage
                 x: Theme.paddingSmall
                 visible: true
                 source: feedicon ? imagedownloader.getLocalPath(feedicon) : "image://theme/icon-m-note"
@@ -33,20 +33,20 @@ Page {
             Label {
                 id: aliaslabel
                 text: feedtitle
-                anchors.left: feedicon.right
-                anchors.bottom: feedicon.verticalCenter
+                anchors.left: feediconimage.right
+                anchors.bottom: feediconimage.verticalCenter
                 color: Theme.primaryColor
-                width: parent.width - feedicon.width
+                width: parent.width - feediconimage.width
             }
             Label {
                 x: Theme.paddingLarge
 
                 text: feedurl
                 font.pixelSize: Theme.fontSizeExtraSmall
-                anchors.left: feedicon.right
-                anchors.top: feedicon.verticalCenter
+                anchors.left: feediconimage.right
+                anchors.top: feediconimage.verticalCenter
                 color: Theme.primaryColor
-                width: parent.width - feedicon.width
+                width: parent.width - feediconimage.width
             }
             onClicked: {
                 console.log("Clicked " + index)
