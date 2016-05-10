@@ -344,9 +344,12 @@ void FBManager::removeFeed(QString url)
 
 void FBManager::setShowIcons(bool showicons)
 {
-    mConfigShowIcons = showicons;
-    mConfigChanged = true;
-    emit showiconsChanged(mConfigShowIcons);
+    if (mConfigShowIcons != showicons)
+    {
+        mConfigShowIcons = showicons;
+        mConfigChanged = true;
+        emit showiconsChanged(mConfigShowIcons);
+    }
 }
 
 bool FBManager::getShowIcons()
@@ -356,8 +359,11 @@ bool FBManager::getShowIcons()
 
 void FBManager::setShowNotifications(bool shownotifications)
 {
-    mConfigShowNotifications = shownotifications;
-    mConfigChanged = true;
+    if (mConfigShowNotifications != shownotifications)
+    {
+        mConfigShowNotifications = shownotifications;
+        mConfigChanged = true;
+    }
 }
 
 bool FBManager::getShowNotifications()
