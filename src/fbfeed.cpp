@@ -171,12 +171,15 @@ void FBFeed::processItem(QXmlStreamReader& xml) {
     else
         item->mImage = imageurl;
 
-    item->mMediaUrl = mediaurl;
-    item->mMediaSize = mediasize;
-    item->mMediaType = mediatype;
+    if (mediatype.contains("audio"))
+    {
+        item->mMediaUrl = mediaurl;
+        item->mMediaSize = mediasize;
+        item->mMediaType = mediatype;
 
-    if (!mediaduration.isEmpty())
-        item->mMediaDuration = QTime::fromString(mediaduration, "hh:mm:ss").msecsSinceStartOfDay()/1000;
+        if (!mediaduration.isEmpty())
+            item->mMediaDuration = QTime::fromString(mediaduration, "hh:mm:ss").msecsSinceStartOfDay()/1000;
+    }
 
     //backup uuid generation
     if (uuid.isEmpty())
@@ -284,12 +287,15 @@ void FBFeed::processEntry(QXmlStreamReader& xml) {
     else
         item->mImage = imageurl;
 
-    item->mMediaUrl = mediaurl;
-    item->mMediaSize = mediasize;
-    item->mMediaType = mediatype;
+    if (mediatype.contains("audio"))
+    {
+        item->mMediaUrl = mediaurl;
+        item->mMediaSize = mediasize;
+        item->mMediaType = mediatype;
 
-    if (!mediaduration.isEmpty())
-        item->mMediaDuration = QTime::fromString(mediaduration, "hh:mm:ss").msecsSinceStartOfDay()/1000;
+        if (!mediaduration.isEmpty())
+            item->mMediaDuration = QTime::fromString(mediaduration, "hh:mm:ss").msecsSinceStartOfDay()/1000;
+    }
 
     //backup uuid generation
     if (uuid.isEmpty())
