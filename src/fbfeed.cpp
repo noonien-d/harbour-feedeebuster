@@ -24,8 +24,10 @@ bool FBFeed::parseFile(QString filepath)
 
     QFile xmlFile(filepath);
     if (!xmlFile.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "Failed to open file " << filepath << " : " << xmlFile.errorString();
         return false;
-
+    }
     xml.setDevice(&xmlFile);
 
     QString imageurl;
