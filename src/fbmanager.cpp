@@ -11,7 +11,7 @@
 #include "fbdownloader.h"
 #include "fbitem.h"
 
-FBManager::FBManager(QObject *parent) : QObject(parent)
+FBManager::FBManager(QObject *parent) : QObject(parent), mQmlRoot(NULL)
 {
     mFeedDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     mFeedDownloader = new FBDownloader(mFeedDirectory);
@@ -52,7 +52,9 @@ FBManager::FBManager(QObject *parent) : QObject(parent)
             if ((feedurl.at(0) == '#') || (feedurl.length() < 3))
                 continue;
 
-            mWatcher->addPath(feedfile);
+            //Dont watch if running in background
+            if (mQmlRoot)
+                mWatcher->addPath(feedfile);
 
             //create and load feed
             FBFeed *feed = new FBFeed (feedfile);
