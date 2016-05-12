@@ -53,6 +53,8 @@ public:
     Q_PROPERTY(int unreadcount READ getUnreadCount NOTIFY unreadcountChanged)
     Q_PROPERTY(bool showicons READ getShowIcons WRITE setShowIcons NOTIFY showiconsChanged)
     Q_PROPERTY(bool shownotifications READ getShowNotifications WRITE setShowNotifications)
+    Q_PROPERTY(bool backgroundrefresh READ getBackgroundRefresh WRITE setBackgroundRefresh)
+    Q_PROPERTY(bool backgroundrefreshavailable READ getBackgroundRefreshAvailable)
 
     void setQmlContext (QQmlContext *mQmlRoot);
 
@@ -70,6 +72,9 @@ public slots:
     void setShowIcons(bool showicons);
     bool getShowNotifications();
     void setShowNotifications(bool shownotfications);
+    bool getBackgroundRefresh();
+    void setBackgroundRefresh(bool backgroundrefresh);
+    bool getBackgroundRefreshAvailable();
     void addFeed (QString url);
     void removeFeed(QString url);
     void reload();

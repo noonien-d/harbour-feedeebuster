@@ -21,6 +21,7 @@
 #include <QStandardPaths>
 #include <QFileSystemWatcher>
 #include <notification.h>
+#include <QtDBus>
 
 #include "fbdownloader.h"
 #include "fbitem.h"
@@ -369,6 +370,69 @@ void FBManager::setShowNotifications(bool shownotifications)
 bool FBManager::getShowNotifications()
 {
     return mConfigShowNotifications;
+}
+
+void FBManager::setBackgroundRefresh(bool backgroundrefresh)
+{
+    //Invoke some systemd-dbus-magic to enable service
+    QDBusConnection con = QDBusConnection::sessionBus();
+    QDBusMessage msg;
+    QDBusMessage re;
+
+    //enable / disable timer unit
+    if (backgroundrefresh)
+    {
+        msg = QDBusMessage::createMethodCall("org.freedesktop.systemd1", "/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager", "EnableUnitFiles");
+        QStringList services = QStringList() << "feedeebuster-reload.timer";
+        msg.setArguments(QVariantList() << services << false << false);
+    }
+    else
+    {
+        msg = QDBusMessage::createMethodCall("org.freedesktop.systemd1", "/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager", "DisableUnitFiles");
+        QStringList services = QStringList() << "feedeebuster-reload.timer";
+        msg.setArguments(QVariantList() << services << false);
+    }
+    re = con.call(msg, QDBus::Block, 100);
+    qDebug() << re;
+
+    //start / stop timer unit
+    if (backgroundrefresh)
+        msg = QDBusMessage::createMethodCall("org.freedesktop.systemd1", "/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager", "StartUnit");
+    else
+        msg = QDBusMessage::createMethodCall("org.freedesktop.systemd1", "/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager", "StopUnit");
+
+    msg.setArguments(QVariantList() << "feedeebuster-reload.timer" << "replace");
+    re = con.call(msg, QDBus::Block, 100);
+    qDebug() << re;
+}
+
+bool FBManager::getBackgroundRefresh()
+{
+    //Todo: start dbus query and emit signal on changed value
+    QDBusConnection con = QDBusConnection::sessionBus();
+
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.freedesktop.systemd1", "/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager", "GetUnitFileState");
+    msg.setArguments(QVariantList() << "feedeebuster-reload.timer");
+    QDBusMessage re = con.call(msg, QDBus::Block, 100);
+
+    qDebug () << re.arguments();
+    if (re.arguments().count() == 1)
+        return  (re.arguments()[0].toString() == "enabled");
+
+    return false;
+}
+
+bool FBManager::getBackgroundRefreshAvailable()
+{
+    //Todo: start dbus query and emit signal on changed value
+    QDBusConnection con = QDBusConnection::sessionBus();
+
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.freedesktop.systemd1", "/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager", "GetUnitFileState");
+    msg.setArguments(QVariantList() << "feedeebuster-reload.timer");
+    QDBusMessage re = con.call(msg, QDBus::Block, 100);
+
+    qDebug () << re.arguments();
+    return (re.arguments().count() == 1);
 }
 
 void FBManager::reload()

@@ -41,5 +41,14 @@ Page {
                 manager.shownotifications = checked
             }
         }
+        TextSwitch {
+            id: serviceSwitch
+            text: qsTr("Background refresh")
+            checked: manager.backgroundrefresh;
+            enabled: manager.backgroundrefreshavailable;
+            onCheckedChanged: {
+                manager.backgroundrefresh = checked
+            }
+        }
     }
 }
