@@ -58,7 +58,7 @@ Page {
                 source: imageurl ? imagedownloader.getLocalPath(imageurl) : mediaurl ? "image://theme/icon-m-speaker" : "image://theme/icon-m-note"
                 asynchronous: true;
                 fillMode: Image.PreserveAspectFit
-                width: manager.showicons ? Theme.iconSizeMedium + Theme.paddingSmall : Theme.paddingSmall
+                width: manager.showicons ? Theme.iconSizeMedium + Theme.paddingSmall : 0
                 height: Theme.iconSizeMedium
 
                 Component.onCompleted: {

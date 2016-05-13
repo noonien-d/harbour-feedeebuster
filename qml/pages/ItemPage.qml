@@ -180,7 +180,6 @@ Page {
                     smooth: true
                     fillMode: Image.PreserveAspectCrop
                     source: "image://theme/icon-m-music"
-
                 }
                 Label {
                     text: currentitem.mediatype() + " " + formatSeconds(currentitem.mediaduration())
@@ -296,8 +295,6 @@ Page {
                 }
             }
             onClicked: {
-                console.log("State " + manager.isplaying);
-
                 if (audioplayer.state == 1)
                     audioplayer.pause();
                 else
@@ -312,7 +309,6 @@ Page {
                     audioplayer.play();
                 }
                 media_slider.visible = true;
-                media_label.visible = false;
             }
         }
         Slider {
@@ -328,7 +324,7 @@ Page {
             maximumValue: (audioplayer.duration / 1000)
             value: (audioplayer.position / 1000)
             valueText: formatSeconds(value)
-            label: currentplayitem.mediaduration() ? currentplayitem.mediatype() + " " + formatSeconds(currentplayitem.mediaduration()) : currentplayitem.mediatype() + " " + formatSeconds(audioplayer.duration / 1000)
+            label: currentplayitem !== 'undefined' ? currentplayitem.mediaduration() ? currentplayitem.mediatype() + " " + formatSeconds(currentplayitem.mediaduration()) : currentplayitem.mediatype() + " " + formatSeconds(audioplayer.duration / 1000) : ""
 
             onDownChanged: {
                 console.log("Seek");

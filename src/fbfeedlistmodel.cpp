@@ -61,10 +61,11 @@ QVariant FBFeedListModel::data(const QModelIndex &index, int role) const
 bool FBFeedListModel::removeRows(int row, int count, const QModelIndex & parent)
 {
     Q_UNUSED(parent);
+    beginRemoveRows(QModelIndex(), row, row+count-1);
 
-    beginRemoveRows(QModelIndex(), row, row);
-    mFeedList.removeAt(row);
+    for (int i=0; i<count; i++)
+        mFeedList.removeAt(row);
+
     endRemoveRows();
-
     return true;
 }

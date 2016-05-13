@@ -34,7 +34,6 @@ int main(int argc, char *argv[])
 {
     QGuiApplication *app = SailfishApp::application(argc, argv);
 
-
     bool startgui = true;
     bool reload = false;
 
@@ -61,8 +60,7 @@ int main(int argc, char *argv[])
     if ((!reload) && (!startgui))
         return 0;
 
-
-    FBManager* manager = new FBManager(app);
+    FBManager* manager = new FBManager((QObject*)app);
     if (reload)
         manager->reload();
 

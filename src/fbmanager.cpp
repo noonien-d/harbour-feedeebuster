@@ -151,6 +151,8 @@ void FBManager::setCurrentItem (int index)
     qDebug() << index;
     mQmlRoot->setContextProperty("currentitem", mCurrentItemListModel->mItemList.at(index));
 
+    qDebug() << mCurrentItemListModel->mItemList.at(index)->mMediaUrl;
+
     if (!mCurrentItemListModel->mItemList.at(index)->mIsRead)
     {
         FBItem *item = mCurrentItemListModel->mItemList.at(index);
@@ -170,7 +172,7 @@ void FBManager::setCurrentItem (int index)
 
 void FBManager::setCurrentMedia(QString media)
 {
-    qDebug() << mAudioPlayer.currentMedia().canonicalUrl().toString();
+    qDebug() << media;
 
     if (mAudioPlayer.currentMedia().canonicalUrl().toString().contains(media))
         return;
