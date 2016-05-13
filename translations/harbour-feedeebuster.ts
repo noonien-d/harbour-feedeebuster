@@ -27,7 +27,7 @@
 <context>
     <name>CoverPage</name>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="46"/>
+        <location filename="../qml/cover/CoverPage.qml" line="45"/>
         <source>unread</source>
         <translation type="unfinished"></translation>
     </message>
@@ -58,22 +58,22 @@
 <context>
     <name>ItemPage</name>
     <message>
-        <location filename="../qml/pages/ItemPage.qml" line="44"/>
+        <location filename="../qml/pages/ItemPage.qml" line="42"/>
         <source>Download</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ItemPage.qml" line="83"/>
+        <location filename="../qml/pages/ItemPage.qml" line="81"/>
         <source>Download failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ItemPage.qml" line="152"/>
+        <location filename="../qml/pages/ItemPage.qml" line="150"/>
         <source>view full content</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ItemPage.qml" line="223"/>
+        <location filename="../qml/pages/ItemPage.qml" line="221"/>
         <source>Website</source>
         <translation type="unfinished"></translation>
     </message>
