@@ -20,7 +20,7 @@
 #include <QDir>
 #include <QNetworkRequest>
 
-FBDownload::FBDownload (QString url, QString localurl, FBDownloader *downloader) : QObject(NULL)
+FBDownload::FBDownload (QUrl url, QString localurl, FBDownloader *downloader) : QObject(NULL)
 {
     mUrl = url;
     mFilepath = localurl;
@@ -50,49 +50,33 @@ void FBDownload::startDownload ()
 
 void FBDownload::onDownloaded ()
 {
-    if (mReply->size() == 0)
-    {
-        qDebug() << "got zero size, check header..." << mUrl;
+    const QVariant redirectionTarget = mReply->attribute(QNetworkRequest::RedirectionTargetAttribute);
 
-        foreach (QNetworkReply::RawHeaderPair pair, mReply->rawHeaderPairs())
+    if (!redirectionTarget.isNull()) {
+        const QUrl newurl = mUrl.resolved(redirectionTarget.toUrl());
+
+        // overwrite possibly written relocation data
+        if (mFile)
+            mFile->seek(0);
+
+        qDebug() << "got relocation to " << newurl;
+        QNetworkRequest request(newurl);
+
+        if (mRequestTimestamp.isValid())
         {
-            qDebug() << QString::fromUtf8(pair.first) + " = " << QString::fromUtf8(pair.second);
-
-            if (QString::fromUtf8(pair.first).contains("Location"))
-            {
-                QString newurl = pair.second;
-
-                if (newurl.at(0) == '/')
-                    newurl = mReply->url().toString(QUrl::RemovePath) + newurl;
-
-                qDebug() << "got relocation to " << newurl;
-                QNetworkRequest request(newurl);
-
-                if (mRequestTimestamp.isValid())
-                {
-                    QLocale locale_us(QLocale::C, QLocale::AnyCountry);
-                    request.setRawHeader(QString("If-Modified-Since").toUtf8(), (locale_us.toString(mRequestTimestamp, "ddd, dd MMM yyyy HH:mm:ss") + " GMT").toUtf8());
-                }
-
-                // overwrite possibly written relocation data
-                if (mFile)
-                    mFile->seek(0);
-
-                mReply = mDownloader->mAccessManager.get(request);
-
-                connect(mReply, &QNetworkReply::readyRead,
-                        this, &FBDownload::onReadyRead);
-                connect(mReply, &QNetworkReply::finished,
-                        this, &FBDownload::onDownloaded);
-
-                return;
-            }
+            QLocale locale_us(QLocale::C, QLocale::AnyCountry);
+            request.setRawHeader(QString("If-Modified-Since").toUtf8(), (locale_us.toString(mRequestTimestamp, "ddd, dd MMM yyyy HH:mm:ss") + " GMT").toUtf8());
         }
 
-        qDebug() << "No relocation in header";
-        mDownloader->onDownloadFailed(this);
+        mReply = mDownloader->mAccessManager.get(request);
+
+        connect(mReply, &QNetworkReply::readyRead,
+                this, &FBDownload::onReadyRead);
+        connect(mReply, &QNetworkReply::finished,
+                this, &FBDownload::onDownloaded);
+        return;
     }
-    else if (mReply->error() == 0)
+    else if ((mReply->error() == 0) && (mReply->size() > 0))
     {
         if (mFile == NULL)
         {
@@ -119,7 +103,7 @@ void FBDownload::onDownloaded ()
         }
         else
         {
-            emit downloadReady(mUrl, mFilepath);
+            emit downloadReady(mUrl.toString(), mFilepath);
             mDownloader->onDownloadReady(this);
         }
     }
@@ -162,24 +146,25 @@ FBDownloader::FBDownloader(QString basepath, bool preservenames, QObject *parent
 FBDownloader::~FBDownloader()
 {
     qDebug() << "Destroy downloader";
-    foreach (QString url, mPendingUrl)
+    foreach (QUrl url, mPendingUrl)
     {
-        qDebug() << "Pending download: " << url;
+        qDebug() << "Pending download: " << url.toString();
     }
 }
 
-void FBDownloader::startDownload(QString url)
+void FBDownloader::startDownload(QString urlstring)
 {
-    if (url.isEmpty())
+    if (urlstring.isEmpty())
         return;
 
-    QString localurl = getLocalPath(url);
+    QString localurl = getLocalPath(urlstring);
+    QUrl url(urlstring);
 
     QFile file(localurl);
     if (file.exists())
     {
 //        qDebug() << "file load file from cache";
-        emit downloadReady(url, localurl);
+        emit downloadReady(url.toString(), localurl);
     }
     else
     {
@@ -188,7 +173,7 @@ void FBDownloader::startDownload(QString url)
 //            qDebug() << "avoid double download";
             return;
         }
-        if ((url.contains("http://")) || (url.contains("https://")))
+        if (url.scheme().contains("http"))
         {
             FBDownload *dl = new FBDownload(url, localurl, this);
 
@@ -198,48 +183,48 @@ void FBDownloader::startDownload(QString url)
         else
         {
 //            qDebug() << "is local file";
-            emit downloadReady(url, localurl);
+            emit downloadReady(url.toString(), localurl);
         }
     }
 }
 
 void FBDownloader::onDownloadReady (FBDownload* download)
 {
-    qDebug() << download->mUrl << " ready";
+    qDebug() << download->mUrl.toString() << " ready";
 
-    mPendingUrl.removeOne(download->mUrl);
+    mPendingUrl.removeOne(download->mUrl.toString());
 
-    emit downloadReady(download->mUrl, download->mFilepath);
+    emit downloadReady(download->mUrl.toString(), download->mFilepath);
 }
 
 void FBDownloader::onDownloadFailed (FBDownload* download)
 {
-    qDebug() << download->mUrl << " failed";
+    qDebug() << download->mUrl.toString() << " failed";
 
-    mPendingUrl.removeOne(download->mUrl);
+    mPendingUrl.removeOne(download->mUrl.toString());
 
-    emit downloadFailed(download->mUrl, download->mFilepath);
+    emit downloadFailed(download->mUrl.toString(), download->mFilepath);
 }
 
-void FBDownloader::startDownloadUpdate(QString url, QString localurl)
+void FBDownloader::startDownloadUpdate(QString urlstring, QString localurl)
 {
     QFile file(localurl);
     if (file.exists())
     {
         qDebug() << "start download if updated";
 
-        QFileInfo finfo(localurl);
-
+        QUrl url(urlstring);
         FBDownload *dl = new FBDownload(url, localurl, this);
         mPendingUrl.append(url);
 
+        QFileInfo finfo(localurl);
         dl->mRequestTimestamp = finfo.lastModified().toUTC();
         dl->startDownload();
     }
     else
     {
         qDebug() << "file to update doesn't exist, should not happen, download anyway :P";
-        startDownload(url);
+        startDownload(urlstring);
     }
 }
 

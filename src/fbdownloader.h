@@ -27,8 +27,8 @@ class FBDownload : public QObject
 {
 Q_OBJECT
 public:
-    explicit FBDownload(QString url, QString localurl, FBDownloader *downloader);
-    QString mUrl;
+    explicit FBDownload(QUrl url, QString localurl, FBDownloader *downloader);
+    QUrl mUrl;
     QString mFilepath;
     QDateTime mRequestTimestamp;
 
@@ -74,7 +74,7 @@ public Q_SLOTS:
 
 private:
     QString mBasepath;
-    QList<QString> mPendingUrl;
+    QList<QUrl> mPendingUrl;
 
     bool mPreserveNames;
 };
