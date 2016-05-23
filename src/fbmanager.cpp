@@ -67,10 +67,6 @@ FBManager::FBManager(QObject *parent) : QObject(parent), mQmlRoot(NULL)
             if ((feedurl.at(0) == '#') || (feedurl.length() < 3))
                 continue;
 
-            //Dont watch if running in background
-            if (mQmlRoot)
-                mWatcher->addPath(feedfile);
-
             //create and load feed
             FBFeed *feed = new FBFeed (feedfile);
             feed->mSourceUrl = feedurl;
@@ -471,4 +467,9 @@ void FBManager::setQmlContext(QQmlContext *qmlroot)
     mQmlRoot->setContextProperty("audioplayer", &mAudioPlayer);
 
     mQmlRoot->setContextProperty("manager", this);
+
+    //Dont watch if running in background
+    foreach (FBFeed *feed, mFeedListModel->mFeedList) {
+        mWatcher->addPath(feed->mSourceFile);
+    }
 }
