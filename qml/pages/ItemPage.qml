@@ -115,6 +115,7 @@ Page {
                 fillMode: Image.PreserveAspectFit
                 height: (sourceSize.height > page.height / 4) ? page.height / 4 : sourceSize.height
                 width: parent.width;
+                cache: false;
 
                 Component.onCompleted: {
                     if (!imagedownloader.isReady(currentitem.imageurl()))

@@ -61,6 +61,7 @@ Page {
                 fillMode: Image.PreserveAspectFit
                 width: manager.showicons ? Theme.iconSizeMedium + Theme.paddingSmall : 0
                 height: Theme.iconSizeMedium
+                sourceSize {height: height;width: width}
 
                 Component.onCompleted: {
                     if (!imagedownloader.isReady(imageurl))
