@@ -78,18 +78,14 @@ Page {
             Label {
                 id: aliaslabel
                 text: itemtitle
-                anchors.left: feedicon.right
-                anchors.bottom: feedicon.verticalCenter
+                anchors {left: feedicon.right; bottom: parent.verticalCenter}
                 color: itemisread ? Theme.primaryColor : Theme.highlightColor
                 width: parent.width - feedicon.width
             }
             Label {
-                x: Theme.paddingLarge
-
                 text: itemtime.toLocaleString(Qt.locale(), Locale.ShortFormat) + "   " + feedtitle
                 font.pixelSize: Theme.fontSizeExtraSmall
-                anchors.left: feedicon.right
-                anchors.top: feedicon.verticalCenter
+                anchors {left: feedicon.right; top: parent.verticalCenter}
                 color: itemisread ? Theme.primaryColor : Theme.highlightColor
                 width: parent.width - feedicon.width
             }

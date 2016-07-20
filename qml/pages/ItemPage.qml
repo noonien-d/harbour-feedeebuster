@@ -92,16 +92,14 @@ Page {
         width: parent.width;
         contentHeight: column.height + pageHeader.height
 
-        anchors.top: parent.top;
-        anchors.bottom: media_bar.top
+        anchors {top: parent.top;bottom: media_bar.top}
 
         Column
         {
             id: column;
 
             width: page.width - Theme.paddingLarge;
-            anchors.top: pageHeader.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors {top: pageHeader.bottom;horizontalCenter: parent.horizontalCenter}
 
             height: description.height + feedicon.height + 3*spacing + fulltext_button.height + media_button.height;
 
@@ -159,8 +157,7 @@ Page {
                 }
                 Label {
                     text: qsTr("view full content")
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: fulltext_icon.right
+                    anchors {verticalCenter: parent.verticalCenter;left: fulltext_icon.right}
                 }
 
                 onClicked: {
@@ -194,8 +191,7 @@ Page {
                 }
                 Label {
                     text: currentitem.mediatype() + " " + formatSeconds(currentitem.mediaduration())
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: media_icon.right
+                    anchors  {verticalCenter: parent.verticalCenter;left: media_icon.right}
                 }
 
                 onClicked: {
@@ -230,8 +226,7 @@ Page {
                 }
                 Label {
                     text: qsTr("Website")
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: link_icon.right
+                    anchors {verticalCenter: parent.verticalCenter;left: link_icon.right}
                 }
 
                 onClicked: {
@@ -278,10 +273,7 @@ Page {
         BackgroundItem {
             id: media_play
 
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
-
-            anchors.leftMargin: Theme.paddingSmall
+            anchors {left: parent.left;verticalCenter: parent.verticalCenter;leftMargin: Theme.paddingSmall}
 
             width: mediaIcon.width
 
@@ -324,9 +316,7 @@ Page {
         }
         Slider {
             id: media_slider
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: media_play.right
-            anchors.right: parent.right
+            anchors {verticalCenter: parent.verticalCenter;left: media_play.right;right: parent.right}
 
             visible: audioplayer.state > 0
             enabled: audioplayer.seekable

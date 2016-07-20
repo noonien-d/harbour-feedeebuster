@@ -47,8 +47,7 @@ Page {
             Label {
                 id: aliaslabel
                 text: feedtitle
-                anchors.left: feediconimage.right
-                anchors.bottom: feediconimage.verticalCenter
+                anchors {left: feediconimage.right;bottom: feediconimage.verticalCenter}
                 color: Theme.primaryColor
                 width: parent.width - feediconimage.width
             }
@@ -57,8 +56,7 @@ Page {
 
                 text: feedurl
                 font.pixelSize: Theme.fontSizeExtraSmall
-                anchors.left: feediconimage.right
-                anchors.top: feediconimage.verticalCenter
+                anchors {left: feediconimage.right;top: feediconimage.verticalCenter}
                 color: Theme.primaryColor
                 width: parent.width - feediconimage.width
             }
