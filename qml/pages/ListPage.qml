@@ -54,26 +54,24 @@ Page {
             Image {
                 id: feedicon
                 x: Theme.paddingSmall
-                visible: imageurl ? imagedownloader.isReady(imageurl) && manager.showicons : true
-                source: imageurl ? imagedownloader.getLocalPath(imageurl) : mediaurl ? "image://theme/icon-m-speaker" : "image://theme/icon-m-note"
+                anchors.verticalCenter: parent.verticalCenter
+                visible: true
+                source: imageurl && imagedownloader.isReady(imageurl) ? imagedownloader.getLocalPath(imageurl) : mediaurl ? "image://theme/icon-m-speaker" : "image://theme/icon-m-note"
                 asynchronous: true;
                 fillMode: Image.PreserveAspectFit
                 width: manager.showicons ? Theme.iconSizeMedium + Theme.paddingSmall : 0
                 height: Theme.iconSizeMedium
 
                 Component.onCompleted: {
-                    if ((!visible) && (manager.showicons))
-                    {
-                        if (imagedownloader.isReady(imageurl))
-                            visible = true;
-                        else
-                            imagedownloader.downloadReady.connect(onLoaded);
-                    }
+                    if (!imagedownloader.isReady(imageurl))
+                        imagedownloader.downloadReady.connect(onLoaded);
                 }
                 function onLoaded(url, localurl) {
-                    console.log("QML:Loaded " + url);
-                    if (localurl == source)
+                    if (url === imageurl)
+                    {
                         visible = true;
+                        source = localurl;
+                    }
                 }
             }
             Label {

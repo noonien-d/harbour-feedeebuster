@@ -110,11 +110,21 @@ Page {
             Image {
                 id: feedicon
                 anchors.horizontalCenter: parent.horizontalCenter
-                visible: imagedownloader.isReady(currentitem.imageurl()) && !webview.visible
-                source: imagedownloader.getLocalPath(currentitem.imageurl())
+                visible: !webview.visible
+                source: imagedownloader.isReady(currentitem.imageurl()) ? imagedownloader.getLocalPath(currentitem.imageurl()) : ""
                 fillMode: Image.PreserveAspectFit
                 height: (sourceSize.height > page.height / 4) ? page.height / 4 : sourceSize.height
                 width: parent.width;
+
+                Component.onCompleted: {
+                    if (!imagedownloader.isReady(currentitem.imageurl()))
+                        imagedownloader.downloadReady.connect(onLoaded);
+                }
+                function onLoaded(url, localurl) {
+                    if (url === currentitem.imageurl()) {
+                        source = localurl;
+                    }
+                }
             }
 
             Label {
