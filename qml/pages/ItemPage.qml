@@ -40,6 +40,7 @@ Page {
             MenuItem {
                 id: menuitem_download;
                 text: qsTr("Download") + " " + currentitem.mediasize();
+                visible: currentitem.mediaurl() !== "";
                 onClicked: {
                     if (!mediadownloader.isReady(currentitem.mediaurl()))
                     {
@@ -52,17 +53,18 @@ Page {
                 Component.onCompleted: {
                     if (mediadownloader.isReady(currentitem.mediaurl()))
                     {
-                        menuitem_download.color = Theme.secondaryColor;
                         menuitem_download.text = menuitem_download.text + " ✓";
+                        media_text.text = media_text.text + " ✓";
+                        enabled = false
                     }
                 }
                 function onLoaded(url, localurl) {
                     console.log("Finished download");
                     media_busy.running = false;
                     media_slider.visible = true;
-
-                    menuitem_download.color = Theme.secondaryColor;
                     menuitem_download.text = menuitem_download.text + " ✓";
+                    media_text.text = media_text.text + " ✓";
+                    enabled = false
 
                     if (audioplayer.state == 1)
                     {
@@ -190,6 +192,7 @@ Page {
                     source: "image://theme/icon-m-music"
                 }
                 Label {
+                    id: media_text
                     text: currentitem.mediatype() + " " + formatSeconds(currentitem.mediaduration())
                     anchors  {verticalCenter: parent.verticalCenter;left: media_icon.right}
                 }
