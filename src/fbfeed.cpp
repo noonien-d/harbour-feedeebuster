@@ -159,6 +159,8 @@ void FBFeed::processItem(QXmlStreamReader& xml) {
         if ((t == QXmlStreamReader::EndElement) && (xml.name() == "item"))
             break;
     }
+    //fix for some feeds with incorrect month abbreviations
+    timetext.replace("July", "Jul");
     QDateTime time = QDateTime::fromString(timetext, Qt::RFC2822Date);
 
     QTextDocument htmldescription;
