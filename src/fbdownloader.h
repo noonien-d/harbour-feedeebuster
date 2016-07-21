@@ -28,6 +28,8 @@ class FBDownload : public QObject
 Q_OBJECT
 public:
     explicit FBDownload(QUrl url, QString localurl, FBDownloader *downloader);
+    virtual ~FBDownload();
+
     QUrl mUrl;
     QString mFilepath;
     QDateTime mRequestTimestamp;

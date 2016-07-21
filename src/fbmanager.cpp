@@ -160,6 +160,7 @@ void FBManager::setCurrentItem (int index)
         if (mNotifications.contains(item))
         {
             mNotifications[item]->close();
+            delete mNotifications[item];
             mNotifications.remove(item);
         }
     }
@@ -325,6 +326,7 @@ void FBManager::removeFeed(QString url)
         {
             qDebug () << "remove feed " << feed->mTitle;
             mFeedListModel->removeRow(mFeedListModel->mFeedList.indexOf(feed));
+            delete feed;
             break;
         }
     }

@@ -20,12 +20,20 @@
 #include <QDir>
 #include <QNetworkRequest>
 
-FBDownload::FBDownload (QUrl url, QString localurl, FBDownloader *downloader) : QObject(NULL)
+FBDownload::FBDownload (QUrl url, QString localurl, FBDownloader *downloader) : QObject(downloader)
 {
     mUrl = url;
     mFilepath = localurl;
     mDownloader = downloader;
     mFile = NULL;
+}
+
+FBDownload::~FBDownload()
+{
+    qDebug() << "destroy " << mUrl;
+    if (mFile)
+        delete mFile;
+
 }
 
 void FBDownload::startDownload ()
@@ -122,6 +130,10 @@ void FBDownload::onReadyRead()
         if (!mFile->open(QFile::WriteOnly))
         {
             qDebug() << "Failed to open intermediate file for " << mFilepath;
+
+            delete mFile;
+            mFile = NULL;
+
             return;
         }
     }
@@ -195,6 +207,7 @@ void FBDownloader::onDownloadReady (FBDownload* download)
     mPendingUrl.removeOne(download->mUrl.toString());
 
     emit downloadReady(download->mUrl.toString(), download->mFilepath);
+    delete download;
 }
 
 void FBDownloader::onDownloadFailed (FBDownload* download)
@@ -204,6 +217,7 @@ void FBDownloader::onDownloadFailed (FBDownload* download)
     mPendingUrl.removeOne(download->mUrl.toString());
 
     emit downloadFailed(download->mUrl.toString(), download->mFilepath);
+    delete download;
 }
 
 void FBDownloader::startDownloadUpdate(QString urlstring, QString localurl)

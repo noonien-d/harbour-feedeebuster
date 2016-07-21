@@ -215,7 +215,10 @@ void FBFeed::processItem(QXmlStreamReader& xml) {
     {
         //Break if item already exists
         if (olditem->mUuid == item->mUuid)
-            return;
+        {
+            delete item;
+            return;   
+        }
     }
 
     mItemList.append(item);
@@ -331,7 +334,10 @@ void FBFeed::processEntry(QXmlStreamReader& xml) {
     {
         //Break if item already exists
         if (olditem->mUuid == item->mUuid)
+        {
+            delete item;
             return;
+        }
     }
 
     mItemList.append(item);
