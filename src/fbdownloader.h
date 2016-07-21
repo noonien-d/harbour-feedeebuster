@@ -34,13 +34,14 @@ public:
     QString mFilepath;
     QDateTime mRequestTimestamp;
 
+signals:
+    void downloadReady (FBDownload *dl);
+    void downloadFailed (FBDownload *dl);
+
 private:
     QFile *mFile;
     QNetworkReply   *mReply;
     FBDownloader    *mDownloader;
-
-signals:
-    void downloadReady (QString url, QString localurl);
 
 public Q_SLOTS:
     void onReadyRead();

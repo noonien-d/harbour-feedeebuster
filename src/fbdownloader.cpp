@@ -92,7 +92,7 @@ void FBDownload::onDownloaded ()
             if (!mFile->open(QFile::WriteOnly))
             {
                 qDebug() << "Error " << mFile->error() << ": " << mFile->errorString();
-                mDownloader->onDownloadFailed(this);
+                emit downloadFailed(this);
                 return;
             }
         }
@@ -107,18 +107,17 @@ void FBDownload::onDownloaded ()
         if (!mFile->rename(mFilepath))
         {
             qDebug() << "Error " << mFile->error() << ": " << mFile->errorString();
-            mDownloader->onDownloadFailed(this);
+            emit downloadFailed(this);
         }
         else
         {
-            emit downloadReady(mUrl.toString(), mFilepath);
-            mDownloader->onDownloadReady(this);
+            emit downloadReady(this);
         }
     }
     else
     {
         qDebug() << "Error " << mReply->error() << ": " << mReply->errorString();
-        mDownloader->onDownloadFailed(this);
+        emit downloadFailed(this);
     }
 }
 
@@ -188,6 +187,9 @@ void FBDownloader::startDownload(QString urlstring)
         if (url.scheme().contains("http"))
         {
             FBDownload *dl = new FBDownload(url, localurl, this);
+
+            connect(dl, &FBDownload::downloadReady, this, &FBDownloader::onDownloadReady);
+            connect(dl, &FBDownload::downloadFailed, this, &FBDownloader::onDownloadFailed);
 
             mPendingUrl.append(url);
             dl->startDownload();
