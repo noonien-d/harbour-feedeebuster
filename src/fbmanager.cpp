@@ -31,6 +31,7 @@ FBManager::FBManager(QObject *parent) : QObject(parent), mQmlRoot(NULL)
     mFeedDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     mFeedDownloader = new FBDownloader(mFeedDirectory);
     connect (mFeedDownloader, &FBDownloader::downloadReady, this, &FBManager::onFeedDownloaded);
+    connect (mFeedDownloader, &FBDownloader::downloadFailed, this, &FBManager::onFeedDownloadFailed);
 
     mImageDownloader = new FBDownloader(QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation));
 
@@ -203,6 +204,7 @@ QList<FBItem*> FBManager::getCombinedList ()
 void FBManager::onFeedDownloaded(QString url, QString localurl)
 {
     qDebug () << "downloaded feed " << localurl;
+    mWatcher->addPath(localurl);
 
     foreach (FBFeed *feed, mFeedListModel->mFeedList)
     {
@@ -279,14 +281,19 @@ void FBManager::onFeedDownloaded(QString url, QString localurl)
     mAllItemListModel->sort();
 }
 
+void FBManager::onFeedDownloadFailed(QString url, QString localurl)
+{
+    Q_UNUSED(url);
+    mWatcher->addPath(localurl);
+}
+
 void FBManager::onFileChanged(QString path)
 {
     qDebug () << "feed changed " << path;
-
-    // reload all files because there is no garanty that every filechange emits an event
     foreach (FBFeed *feed, mFeedListModel->mFeedList)
     {
-        onFeedDownloaded(feed->mSourceUrl, feed->mSourceFile);
+        if (feed->mSourceFile == path)
+            onFeedDownloaded(feed->mSourceUrl, feed->mSourceFile);
     }
 }
 
@@ -439,6 +446,7 @@ void FBManager::reload()
 {
     foreach (FBFeed *feed, mFeedListModel->mFeedList)
     {
+        mWatcher->removePath(feed->mSourceFile);
         mFeedDownloader->startDownloadUpdate(feed->mSourceUrl, feed->mSourceFile);
     }
 }

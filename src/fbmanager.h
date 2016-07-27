@@ -67,6 +67,7 @@ public slots:
     void setCurrentItem (int index);
     void setCurrentMedia (QString url);
     void onFeedDownloaded(QString url, QString localurl);
+    void onFeedDownloadFailed(QString url, QString localurl);
     int  getUnreadCount();
     bool getShowIcons();
     void setShowIcons(bool showicons);

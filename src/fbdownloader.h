@@ -45,7 +45,7 @@ private:
 
 public Q_SLOTS:
     void onReadyRead();
-    void onDownloaded ();
+    void onFinished ();
 
 public:
     void startDownload ();
