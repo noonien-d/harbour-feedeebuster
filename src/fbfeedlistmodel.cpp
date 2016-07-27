@@ -69,3 +69,13 @@ bool FBFeedListModel::removeRows(int row, int count, const QModelIndex & parent)
     endRemoveRows();
     return true;
 }
+
+void FBFeedListModel::addFeed(FBFeed *feed)
+{
+    if (mFeedList.contains(feed))
+        return;
+
+    beginInsertRows(QModelIndex(), mFeedList.size(), mFeedList.size());
+    mFeedList.append(feed);
+    endInsertRows();
+}

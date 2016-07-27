@@ -267,7 +267,7 @@ void FBManager::onFeedDownloaded(QString url, QString localurl)
     qDebug () << "add new feed: " << feed->mTitle;
 
     //... add the feed to the feed list
-    mFeedListModel->mFeedList.append(feed);
+    mFeedListModel->addFeed(feed);
 
     //... and add its content to the item view
     mAllItemListModel->connect (feed, &FBFeed::newItem, mAllItemListModel, &FBItemListModel::onNewItem);

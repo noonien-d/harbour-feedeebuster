@@ -31,6 +31,8 @@ public:
     virtual bool removeRows(int row, int count,
                             const QModelIndex & parent = QModelIndex());
 
+    void addFeed(FBFeed *feed);
+
     enum
     {
         TitleRole,
