@@ -103,7 +103,7 @@ Page {
             width: page.width - Theme.paddingLarge;
             anchors {top: pageHeader.bottom;horizontalCenter: parent.horizontalCenter}
 
-            height: description.height + feedicon.height + 3*spacing + fulltext_button.height + media_button.height;
+            height: description.height + feedicon.height + 3*spacing + fulltext_button.height + media_button.height + link_button.height;
 
             spacing: Theme.paddingLarge;
 
